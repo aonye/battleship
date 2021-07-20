@@ -1,0 +1,242 @@
+body {
+    font-family: sans-serif;
+    -webkit-text-size-adjust: auto;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    height: 5vh;
+    background-color: rgb(176, 228, 234);
+    color: floralwhite;
+    font-size: 3vw;
+    line-height: 40px;
+    padding: 2rem;
+}
+
+header div {
+    margin: 0px 0.5vw 0px 0.5vw;
+    font-weight: bold;
+}
+
+header img {
+    height: 5vh;
+}
+
+html, body {
+    margin: 0;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    height: 10vh;
+    align-items: center;
+}
+
+input{
+    width: 30vw;
+}
+
+form input + button {
+    margin-left: -3vw;
+}
+
+#weatherinfo {
+    background-color: floralwhite;
+    font-weight: bold;
+    border: 0.75vmax solid rgb(32,178,170);
+    border-radius: 10px;
+    height: 50vh;
+    width: 30vw;
+    font-size: 1vmax;
+    display: none;
+    position: relative;
+    margin: 8vh auto auto auto;
+    text-align: center;
+    justify-content: center;
+    grid-template-columns: 4vw 4vw 4vw 4vw;
+    grid-template-rows: auto;
+    column-gap: 2vw;
+    grid-template-areas:
+    'city city city city'
+    'condition condition cloudy cloudy'
+    'descript descript descript descript'
+    'temp . . feel'
+    'min . . max'
+    'humid . . pressure'
+    'wind wind wind wind';
+}
+
+span {
+    color: teal;
+}
+
+div.cityName {
+    font-size: 3em;
+    color: teal;
+    grid-area: city;
+}
+
+div.conditions {
+    grid-area: condition;
+}
+
+div.descript {
+    grid-area: descript;
+}
+
+div.cloudiness {
+    grid-area: cloudy;
+}
+
+div.temperature {
+    grid-area: temp;
+}
+
+div.feelsLike {
+    grid-area: feel;
+}
+
+div.minTemp {
+    grid-area: min;
+}
+
+div.maxTemp {
+    grid-area: max;
+}
+
+div.humidity {
+    grid-area: humid;
+}
+
+div.pressure {
+    grid-area: pressure;
+}
+
+div.windSpeed {
+    grid-area: wind;
+}
+
+span {
+    white-space:nowrap;
+}
+
+.check{
+    position: absolute;
+    right: 2.5vw;
+}
+
+.temptoggle {
+    position: absolute;
+}
+
+input[id='checkbox']{
+    appearance: initial;
+    margin-top: 0.5vh;
+    width: 2vw;
+    height: 4vh;
+    border: none;
+    position: absolute;
+    cursor: pointer;
+}
+
+input[id='checkbox']:checked {
+    background: red;
+}
+
+input[id='checkbox']:checked:after {
+    content: "X";
+    font-size: 1.5em;
+    color: #fff;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.temptoggle {
+    background-color: teal;
+    color: white;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    margin-top: 0.5vh;
+    width: 2vw;
+    height: 4vh;
+    left: 0.5vw;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    font-weight: lighter;
+}    
+    
+/*     
+    <header>
+        <img src="sunny_weather_icon_150663.png">
+        <div>Aonye's Weather App</div>
+        <img src="sunny_weather_icon_150663.png">
+    </header>
+
+    <form>
+        <input type='text' id='search' name='gifsearch' placeholder="Enter a City to Search">
+        <button>Submit</button>
+    </form>
+
+    <!--
+    <button id='test'>Click to toggle input</button>
+    -->
+
+    <div id='weatherinfo'>
+        <div class='cityName'></div>
+        <div class='conditions'>
+            <span>Current condition:</span>
+            <div></div>
+        </div>
+        <div class='descript'>
+            <span>Description:</span>
+            <div></div>
+        </div>
+        <div class='cloudiness'>
+            <span>Cloudiness:</span>
+            <div></div>
+        </div>
+        <div class='temperature'>
+            <span>Temperature:</span>
+            <div></div>
+        </div>
+        <div class='feelsLike'>
+            <span>Feels like:</span>
+            <div></div>
+        </div>
+        <div class='minTemp'>
+            <span>Temp min:</span>
+            <div></div>
+        </div>
+        <div class='maxTemp'>
+            <span>Temp max:</span>
+            <div></div>
+        </div>
+        <div class='humidity'>
+            <span>Humidity:</span>
+            <div></div>
+        </div>
+        <div class='pressure'>
+            <span>Pressure:</span>
+            <div></div>
+        </div>
+        <div class='windSpeed'>
+            <span>Wind speed:</span>
+            <div></div>
+        </div>
+        <div class='check'>
+            <label>
+                <input type='checkbox' id='checkbox' checked='checked'></input>
+                <span class='checkmark'></span>
+            </label>
+        </div>
+        <div class='temptoggle'>
+            <div>F</div>
+        </div>
+    </div> */
