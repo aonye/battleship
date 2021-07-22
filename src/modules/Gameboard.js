@@ -8,7 +8,6 @@
 // Gameboards should keep track of missed attacks so they can display them properly.
 // Gameboards should be able to report whether or not all of their ships have been sunk.
 
-import initialize from '..';
 import ship from './makeship';
 
 //takes 5 coordinates before returning an appropriate gameboard.
@@ -34,22 +33,22 @@ const gameBoard = () => {
 
     }
 
-    function convertCoordinate(coordinate) {
-        let letter = coordinate.slice(0, 1);
-        let num = coordinate.slice(1, coordinate.length);
-        let decVal = letter.charCodeAt();
-        let letterToNum = 0;
-        while (decVal > 65) {
-            decVal--;
-            letterToNum += 10;
-        }
-        return parseFloat(letterToNum) + parseFloat(num) - 1;
-    }
+    // function convertCoordinate(coordinate) {
+    //     let letter = coordinate.slice(0, 1);
+    //     let num = coordinate.slice(1, coordinate.length);
+    //     let decVal = letter.charCodeAt();
+    //     let letterToNum = 0;
+    //     while (decVal > 65) {
+    //         decVal--;
+    //         letterToNum += 10;
+    //     }
+    //     return parseFloat(letterToNum) + parseFloat(num) - 1;
+    // }
 
     function placeShip(name, length, coordinate) { //alignment is either vertical or horizontal
         // Gameboards should be able to place ships at specific coordinates 
         // by calling the ship factory function.
-        coordinate = convertCoordinate(coordinate);
+        //coordinate = convertCoordinate(coordinate);
 
         //pretend we place ship of length 4 at arr position 0.
         let newShip = ship(name, length);
@@ -77,16 +76,15 @@ const gameBoard = () => {
     }
 
     function receiveAttack(coord) {
-        coord = convertCoordinate(coord);
-        let board = boardInformation["board"];
+        const board = boardInformation.board;
         if (board[coord]['hasBeenHit'] === false) {
             board[coord]['hasBeenHit'] = true;
             if (board[coord]['containShip'] === true) {
-                let ship = getShip(board[coord]['shipName']);
+                let ship = getShip(board[coord]['shipName']); //successful hit
                 ship.hit(board[coord]['position']);
-                alert('Successful hit!');
-            } else {
-                alert('A swing and a miss.');
+                return true;
+            } else { //unsuccessful 
+                return false;
             }
         }
     }
@@ -107,14 +105,11 @@ const gameBoard = () => {
                 return false;
             }
         }
-        return true;
+        //return true;
+        return false;
     }
 
-    function helloWorld() {
-        console.log('hello world');
-    }
-
-    return { placeShip, helloWorld, convertCoordinate, toggleVertical, receiveAttack, isAllSunk, boardInformation };
+    return { placeShip, toggleVertical, receiveAttack, isAllSunk, boardInformation };
 };
 
 export default gameBoard;

@@ -12,6 +12,6 @@ const board = gameBoard();
 //test for isAllSunk
 
 test('All ships sunk', () => {
-    board.placeShip('mockship', 3, 'A1');
+    board.placeShip('mockship', 3, 'A1'); //mock placeShip
     expect(board.isAllSunk()).toEqual(false);
 });
