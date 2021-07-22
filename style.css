@@ -3,6 +3,33 @@ body {
     -webkit-text-size-adjust: auto;
 }
 
+.container {
+    display: flex;
+    margin-top: 25vh;
+}
+
+.board {
+    background-color: whitesmoke;
+    display: grid;
+    height: 500px;
+    width: 500px;
+    margin: auto;
+    border: 3px solid black;
+    grid-template-columns: 1fr repeat(9, 1fr);
+}
+
+.board div {
+    border: 1px solid gray;
+}
+
+.board div:hover {
+    background-color: darkgray;
+}
+
+.hit {
+    background-color: red;
+}
+
 header {
     display: flex;
     justify-content: center;
