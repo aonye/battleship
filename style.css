@@ -30,6 +30,10 @@ body {
     background-color: red;
 }
 
+#Computer div[class=0]{
+    background-color: purple !important;
+}
+
 header {
     display: flex;
     justify-content: center;
