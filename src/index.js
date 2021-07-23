@@ -2,6 +2,7 @@ import gameBoardFact from './modules/Gameboard';
 import playerFact from './modules/player';
 import display from './modules/display';
 import gameBoard from './modules/Gameboard';
+import Player from './modules/player';
 
 const initialize = (() => {
     const gameInfo = {};
@@ -50,32 +51,55 @@ const initialize = (() => {
             console.log('made it in here');
             return;
         } else {
-            //eventhandler recursion.
-            playerRound();
-            return;
+            switch (gameInfo.currentPlayer) {
+                case 'player': {
+                    playRound();//eventhandler handles recursion
+                    break;
+                }
+                case 'cpu': {
+                    setTimeout(() => {
+                        computerPlay();
+                    }, 1);
+                    break;
+                }
+            }
         }
     }
 
-    function playerRound() {
+    function playRound() {
         let DOMNodes = document.querySelectorAll(`#${gameInfo[`${gameInfo.currentPlayer}`]['playerInfo']['name']} div`);
-
         DOMNodes.forEach((node) => {
             node.addEventListener('click', nodeClickHand);
         });
-
         function nodeClickHand(event) {
             const index = event.target.className;
             const board = gameInfo[`${gameInfo.currentPlayer}Board`]['boardInformation']['board'];
             if (gameInfo[`${gameInfo.currentPlayer}`].checkMove(board[index])) { //checks if node has been clicked before
-                let result = gameInfo[`${gameInfo.currentPlayer}Board`].receiveAttack(index);
-                display.updateBoardColor(event.target, result);
                 DOMNodes.forEach((node) => node.removeEventListener('click', nodeClickHand));
-                changePlayer();
-                playGame();
+                finishRound(event.target, index);
                 return;
             }
             alert('Cannot select this node, please try again');
         }
+    }
+
+    function finishRound(div, index) {
+        const result = gameInfo[`${gameInfo.currentPlayer}Board`].receiveAttack(index);
+        display.updateBoardColor(div, result);
+        changePlayer();
+        playGame();
+    }
+
+    function computerPlay() {
+        let index = gameInfo.cpu.generateMove();
+        const board = gameInfo.cpuBoard.boardInformation.board;
+        while (!gameInfo.cpu.checkMove(board[index])) {
+            console.log(`invalid with ${index}, retrying with....`);
+            index = gameInfo.cpu.generateMove();
+            console.log(index);
+        }
+        const div = document.querySelector(`#Computer div[class='${index}']`);
+        finishRound(div, index);
     }
 
     function changePlayer() {
