@@ -13,13 +13,11 @@ import ship from './makeship';
 //takes 5 coordinates before returning an appropriate gameboard.
 
 const gameBoard = () => {
-    const boardInformation = {
-        board: initializeArr(),
-        ships: [],
-        winner: false,
-        isVertical: false,
-    };
     //10x10 board
+    const board = initializeArr();
+    const ships = [];
+    let winner = false;
+    let isVertical = false;
 
     function initializeArr() {
         let arr = new Array(100)
@@ -27,10 +25,6 @@ const gameBoard = () => {
             arr[i] = { containShip: false, hasBeenHit: false }
         }
         return arr;
-    }
-
-    function checkValidPlacement(coordinate) {
-
     }
 
     // function convertCoordinate(coordinate) {
@@ -45,43 +39,42 @@ const gameBoard = () => {
     //     return parseFloat(letterToNum) + parseFloat(num) - 1;
     // }
 
-    function placeShip(name, length, coordinate) { //alignment is either vertical or horizontal
+    function placeShip(coordinate) {
+        //alignment is either vertical or horizontal
         // Gameboards should be able to place ships at specific coordinates 
         // by calling the ship factory function.
-        //coordinate = convertCoordinate(coordinate);
-
-        //pretend we place ship of length 4 at arr position 0.
-        let newShip = ship(name, length);
-        for (let i = 0; i < newShip.length; i++) {
-            if (boardInformation['isVertical'] === true) {
+        const { name, length } = getShipInfo(getNumOfShips());
+        coordinate = parseFloat(coordinate);
+        for (let i = 0; i < length; i++) {
+            if (isVertical === true) {
                 let vertAdjust = i * 10;
-                boardInformation['board'][coordinate + vertAdjust]['containShip'] = true;
-                boardInformation['board'][coordinate + vertAdjust]['shipName'] = name;
-                boardInformation['board'][coordinate + vertAdjust]['position'] = i;
+                board[coordinate + vertAdjust]['containShip'] = true;
+                board[coordinate + vertAdjust]['shipName'] = name;
+                board[coordinate + vertAdjust]['position'] = i;
             } else {
-                boardInformation['board'][coordinate]['containShip'] = true;
-                boardInformation['board'][coordinate]['shipName'] = name;
-                boardInformation['board'][coordinate]['position'] = i;
+                board[coordinate + i]['containShip'] = true;
+                board[coordinate + i]['shipName'] = name;
+                board[coordinate + i]['position'] = i;
             }
         }
-        boardInformation['ships'].push(newShip);
+        ships.push({ name, length });
     }
 
     function toggleVertical() {
-        if (boardInformation['isVertical'] === true) {
-            boardInformation['isVertical'] = false;
+        if (isVertical === true) {
+            isVertical = false;
         } else {
-            boardInformation['isVertical'] = true;
+            isVertical = true;
         }
     }
 
     function receiveAttack(coord) {
-        const board = boardInformation.board;
         if (board[coord]['hasBeenHit'] === false) {
             board[coord]['hasBeenHit'] = true;
             if (board[coord]['containShip'] === true) {
-                let ship = getShip(board[coord]['shipName']); //successful hit
-                ship.hit(board[coord]['position']);
+                getShip(board[coord]['shipName']); //successful hit
+                console.log(name);
+                //ship.hit(board[coord]['position']);
                 return true;
             } else { //unsuccessful 
                 return false;
@@ -90,26 +83,60 @@ const gameBoard = () => {
     }
 
     function getShip(name) {
-        let locatedShip = boardInformation['ships'].filter((ships) => {
-            return ships['name'] === name;
+        const locatedShip = ships.filter((ship) => {
+            return ship['name'] === name;
         });
-        let shipObj = locatedShip[0];
-        return shipObj;
+        console.log(locatedShip, 'sdfsdffd');
+        const shipObj = locatedShip[0];
+        console.log(shipObj, 'sfsfdsfdsf');
+        //return shipObj;
     }
 
 
     function isAllSunk() {
-        let shipArr = boardInformation['ships'];
-        for (let i = 0; i < shipArr.length; i++) {
-            if (shipArr[i].isSunk() === false) {
-                return false;
-            }
-        }
-        //return true;
+        // let shipArr = ships;
+        // for (let i = 0; i < shipArr.length; i++) {
+        //     if (shipArr[i].isSunk() === false) {
+        //         return false;
+        //     }
+        // }
+        // //return true;
         return false;
     }
 
-    return { placeShip, toggleVertical, receiveAttack, isAllSunk, boardInformation };
+    function verticalStatus() {
+        return isVertical;
+    }
+
+    function getNumOfShips() {
+        return ships.length;
+    }
+
+    function getShipInfo(shipsArrLen) {
+        switch (shipsArrLen) {
+            case 0: {
+                return { length: 5, name: 'Carrier' };
+            }
+            case 1: {
+                return { length: 4, name: 'Battleship' };
+            }
+            case 2: {
+                return { length: 3, name: 'Cruiser' };
+            }
+            case 3: {
+                return { length: 3, name: 'Submarine' };
+            }
+            case 4: {
+                return { length: 2, name: 'Destroyer' };
+            }
+            default: {
+                console.log('this should never be printed');
+            }
+
+        }
+    }
+
+    return { placeShip, toggleVertical, verticalStatus, getNumOfShips, getShipInfo, receiveAttack, isAllSunk, board, ships };
 };
 
 export default gameBoard;

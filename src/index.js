@@ -2,7 +2,6 @@ import gameBoardFact from './modules/Gameboard';
 import playerFact from './modules/player';
 import display from './modules/display';
 import gameBoard from './modules/Gameboard';
-import Player from './modules/player';
 
 const initialize = (() => {
     const gameInfo = {};
@@ -23,19 +22,102 @@ const initialize = (() => {
     // t.receiveAttack('C5');
     // console.log(t.isAllSunk());
 
+    //ship picking phase
+
     initGame();
-    playGame();
+    //playGame();
+
+    function placeShipPhase() {
+        //console.log(gameInfo.player.boardInfo.getNumOfShips(), gameInfo.cpu.boardInfo.getNumOfShips());
+        if (gameInfo.player.boardInfo.getNumOfShips() === 5 && gameInfo.cpu.boardInfo.getNumOfShips() === 5) {
+            console.log('finished placing ships');
+            playGame();
+            return;
+        }
+        playerPick();
+    }
+
+
+    function playerPick() {
+        const currentPlayer = getPlayer();
+        const nodeList = document.querySelectorAll(`#${getName()} div`);
+        if (getName() !== 'Computer') {
+            nodeList.forEach((node) => {
+                node.addEventListener('click', nodeEventHand);
+            });
+        } else {
+            computerMove();
+        }
+        function nodeEventHand(event) {
+            if (currentPlayer.checkShipPlacement(event.target.className)) {
+                console.log('passed error checking');
+                currentPlayer.boardInfo.placeShip(event.target.className);
+                nodeList.forEach((node) => { node.removeEventListener('click', nodeEventHand) });
+                togglePlayer();
+                placeShipPhase();
+            }
+        }
+
+        function computerMove() {
+            let move;
+            do {
+                if (getRandomVertical) {
+                    currentPlayer.boardInfo.toggleVertical();
+                }
+                move = currentPlayer.generateMove();
+            } while (!currentPlayer.checkShipPlacement(move));
+            currentPlayer.boardInfo.placeShip(move);
+            togglePlayer();
+            placeShipPhase();
+            function getRandomVertical() {
+                return Math.floor(Math.random() * 2);
+            }
+        }
+    }
 
     function initGame() {
-        gameInfo['player'] = playerFact('Anon');
-        gameInfo['playerBoard'] = gameBoardFact();
-        gameInfo['cpu'] = playerFact('Computer');
-        gameInfo['cpuBoard'] = gameBoardFact();
+        //get input for player's real name and insert it into this function
+        //error check - cannot name yourself Computer.
+        gameInfo['player'] = playerFact('Anon', gameBoardFact());
+        gameInfo['cpu'] = playerFact('Computer', gameBoardFact());
         gameInfo['currentPlayer'] = pickRandStarter(Math.floor(Math.random() * 2));
-        display.renderBoard(gameInfo['player'].playerInfo.name);
-        display.renderBoard(gameInfo['cpu'].playerInfo.name);
+        display.renderBoard(gameInfo['player'].name);
+        display.renderBoard(gameInfo['cpu'].name);
 
-        console.log(`${gameInfo.currentPlayer} has been randomly chosen to start first`);
+        console.log(`${getName()} has been randomly chosen to start first`);
+        placeShipPhase();
+    }
+
+    function getName() { //gets currentplayer's registered name
+        return gameInfo[`${gameInfo.currentPlayer}`]['name'];
+    }
+
+    function getOpponentName() {
+        if (gameInfo.currentPlayer === 'player') {
+            return gameInfo['cpu']['name'];
+        } else {
+            return gameInfo['player']['name'];
+        }
+    }
+
+    function getPlayer() {
+        return gameInfo[`${gameInfo.currentPlayer}`];
+    }
+
+    function getOpponent() {
+        if (gameInfo.currentPlayer === 'player') {
+            return gameInfo['cpu'];
+        } else {
+            return gameInfo['player'];
+        }
+    }
+
+    function togglePlayer() {
+        if (getName() !== 'Computer') { //getName is a pure fxn.
+            gameInfo.currentPlayer = 'cpu';
+        } else {
+            gameInfo.currentPlayer = 'player';
+        }
     }
 
     function pickRandStarter(num) {
@@ -46,8 +128,11 @@ const initialize = (() => {
     }
 
     function playGame() {
-        console.log(gameInfo.playerBoard.isAllSunk(), gameInfo.cpuBoard.isAllSunk());
-        if (gameInfo.playerBoard.isAllSunk() && gameInfo.cpuBoard.isAllSunk()) {
+        //Logic:
+        //currentPlayer selects node on the opposing board
+        //Checks if it's a hit or a miss
+        //Checks if the ship has been sunk
+        if (gameInfo.player.boardInfo.isAllSunk() && gameInfo.cpu.boardInfo.isAllSunk()) {
             console.log('made it in here');
             return;
         } else {
@@ -59,7 +144,7 @@ const initialize = (() => {
                 case 'cpu': {
                     setTimeout(() => {
                         computerPlay();
-                    }, 1);
+                    }, 2000);
                     break;
                 }
             }
@@ -67,14 +152,15 @@ const initialize = (() => {
     }
 
     function playRound() {
-        let DOMNodes = document.querySelectorAll(`#${gameInfo[`${gameInfo.currentPlayer}`]['playerInfo']['name']} div`);
+        const DOMNodes = document.querySelectorAll(`#${getOpponentName()} div`); //select opponent board
         DOMNodes.forEach((node) => {
             node.addEventListener('click', nodeClickHand);
         });
         function nodeClickHand(event) {
             const index = event.target.className;
-            const board = gameInfo[`${gameInfo.currentPlayer}Board`]['boardInformation']['board'];
-            if (gameInfo[`${gameInfo.currentPlayer}`].checkMove(board[index])) { //checks if node has been clicked before
+            const opponent = getOpponent();
+            const board = opponent.boardInfo.board;
+            if (opponent.checkMove(board[index])) { //checks if node has been clicked before
                 DOMNodes.forEach((node) => node.removeEventListener('click', nodeClickHand));
                 finishRound(event.target, index);
                 return;
@@ -84,31 +170,22 @@ const initialize = (() => {
     }
 
     function finishRound(div, index) {
-        const result = gameInfo[`${gameInfo.currentPlayer}Board`].receiveAttack(index);
+        const result = getOpponent().boardInfo.receiveAttack(index);
         display.updateBoardColor(div, result);
-        changePlayer();
+        togglePlayer();
         playGame();
     }
 
     function computerPlay() {
-        let index = gameInfo.cpu.generateMove();
-        const board = gameInfo.cpuBoard.boardInformation.board;
-        while (!gameInfo.cpu.checkMove(board[index])) {
-            console.log(`invalid with ${index}, retrying with....`);
+        let index;
+        const opponent = getOpponent();
+        do {
             index = gameInfo.cpu.generateMove();
-            console.log(index);
-        }
-        const div = document.querySelector(`#Computer div[class='${index}']`);
+        } while (!opponent.checkMove(index));
+        const div = document.querySelector(`#${getOpponentName()} div[class='${index}']`);
         finishRound(div, index);
     }
 
-    function changePlayer() {
-        if (gameInfo.currentPlayer === 'player') {
-            gameInfo.currentPlayer = 'cpu';
-        } else {
-            gameInfo.currentPlayer = 'player';
-        }
-    }
 })();
 
 export default initialize;
