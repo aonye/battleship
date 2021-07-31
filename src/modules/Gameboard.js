@@ -8,7 +8,7 @@
 // Gameboards should keep track of missed attacks so they can display them properly.
 // Gameboards should be able to report whether or not all of their ships have been sunk.
 
-import ship from './makeship';
+import makeShip from './makeship';
 
 //takes 5 coordinates before returning an appropriate gameboard.
 
@@ -44,6 +44,7 @@ const gameBoard = () => {
         // Gameboards should be able to place ships at specific coordinates 
         // by calling the ship factory function.
         const { name, length } = getShipInfo(getNumOfShips());
+        const newShip = makeShip(name, length);
         coordinate = parseFloat(coordinate);
         for (let i = 0; i < length; i++) {
             if (isVertical === true) {
@@ -57,7 +58,7 @@ const gameBoard = () => {
                 board[coordinate + i]['position'] = i;
             }
         }
-        ships.push({ name, length });
+        ships.push(newShip);
     }
 
     function toggleVertical() {
@@ -72,36 +73,30 @@ const gameBoard = () => {
         if (board[coord]['hasBeenHit'] === false) {
             board[coord]['hasBeenHit'] = true;
             if (board[coord]['containShip'] === true) {
-                getShip(board[coord]['shipName']); //successful hit
-                console.log(name);
-                //ship.hit(board[coord]['position']);
-                return true;
+                const ship = getShip(board[coord]['shipName']);
+                ship.hit(board[coord]['position']); //record successful hit
+                return { ship, result: true };
             } else { //unsuccessful 
-                return false;
+                return { ship: undefined, result: false };
             }
         }
     }
 
     function getShip(name) {
         const locatedShip = ships.filter((ship) => {
-            return ship['name'] === name;
+            return ship['name'] === name; //filter array for ships for ship hit
         });
-        console.log(locatedShip, 'sdfsdffd');
-        const shipObj = locatedShip[0];
-        console.log(shipObj, 'sfsfdsfdsf');
-        //return shipObj;
+        return locatedShip[0];
     }
 
 
     function isAllSunk() {
-        // let shipArr = ships;
-        // for (let i = 0; i < shipArr.length; i++) {
-        //     if (shipArr[i].isSunk() === false) {
-        //         return false;
-        //     }
-        // }
-        // //return true;
-        return false;
+        for (let i = 0; i < ships.length; i++) {
+            if (ships[i].isSunk() === false) {
+                return false;
+            }
+        }
+        return true;
     }
 
     function verticalStatus() {
