@@ -10,12 +10,23 @@ body {
 
 .board {
     background-color: whitesmoke;
+    text-align: center;
+    font-size: 2.5em;
     display: grid;
     height: 500px;
     width: 500px;
     margin: auto;
     border: 3px solid black;
     grid-template-columns: 1fr repeat(9, 1fr);
+    grid-template-rows: 1fr repeat(9, 1fr);
+}
+
+.miss {
+    color: red;
+}
+
+.hit {
+    color: green;
 }
 
 .board div {
@@ -26,13 +37,6 @@ body {
     background-color: darkgray;
 }
 
-.hit {
-    background-color: red;
-}
-
-#Computer div[class=0]{
-    background-color: purple !important;
-}
 
 header {
     display: flex;
