@@ -1,5 +1,13 @@
+@font-face {
+    font-family: 'ITCMachine';
+    font-style: normal;
+    font-weight: normal;
+    src: local('ITCMachine'), url('MachineStd-Bold.otf') format("opentype");
+}
+
 body {
-    font-family: sans-serif;
+    background-color: rgb(0, 0, 102);
+    font-family: 'ITCMachine';
     -webkit-text-size-adjust: auto;
 }
 
@@ -16,7 +24,7 @@ body {
     height: 500px;
     width: 500px;
     margin: auto;
-    border: 3px solid black;
+    border: 3px solid rgb(60, 0, 60);
     grid-template-columns: 1fr repeat(9, 1fr);
     grid-template-rows: 1fr repeat(9, 1fr);
 }
@@ -42,9 +50,10 @@ header {
     display: flex;
     justify-content: center;
     height: 5vh;
-    background-color: rgb(176, 228, 234);
+    background-color: rgb(60, 0, 60);
     color: floralwhite;
     font-size: 3vw;
+    font-weight: bolder;
     line-height: 40px;
     padding: 2rem;
 }
