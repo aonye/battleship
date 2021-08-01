@@ -47,13 +47,16 @@ const display = (() => {
     }
 
     function unhideNode(nodeID) {
-        console.log(nodeID);
-        nodeID.style.transition = 'opacity 1s ease-in';
+        nodeID.style.transition = 'opacity 0.5s ease-in';
         nodeID.style.opacity = '1';
     }
 
+    function hideNode(nodeID) {
+        nodeID.style.transition = 'opacity, 0.5s ease-out';
+        nodeID.style.opacity = '0';
+    }
 
-    return { updateShips, updateBoardResult, renderBoard, shipDestroyed, changeBulletMsg, unhideNode };
+    return { updateShips, updateBoardResult, renderBoard, shipDestroyed, changeBulletMsg, unhideNode, hideNode };
 
 })();
 

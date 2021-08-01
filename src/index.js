@@ -24,25 +24,29 @@ const initialize = (() => {
     // t.receiveAttack('C5');
     // console.log(t.isAllSunk());
 
-    setTimeout(() => {
-        display.changeBulletMsg('Player: please enter your name below: ');
-        console.log('lol');
-        display.unhideNode(form);
-    }, 2000);
+    gamePrelim();
+
+    function gamePrelim() {
+        setTimeout(() => {
+            display.changeBulletMsg('Player, please enter your name below: ');
+            display.unhideNode(form);
+        }, 2000);
+    }
+
+
 
     //ship picking phase
-    initGame();
+    //initGame();
 
-    function initGame() {
+    function initGame(playerName) {
         //get input for player's real name and insert it into this function
         //error check - cannot name yourself Computer.
-        gameInfo['player'] = playerFact('Anon', gameBoardFact());
+        gameInfo['player'] = playerFact(playerName, gameBoardFact());
         gameInfo['cpu'] = playerFact('Computer', gameBoardFact());
         gameInfo['currentPlayer'] = pickRandStarter(Math.floor(Math.random() * 2));
         display.renderBoard(gameInfo['player'].name);
         display.renderBoard(gameInfo['cpu'].name);
-
-        console.log(`${getPlayer().name} has been randomly chosen to start first`);
+        display.changeBulletMsg(`${getPlayer().name} has been randomly chosen to start`);
         placeShipPhase();
     }
 
@@ -59,13 +63,19 @@ const initialize = (() => {
     function insertShip() {
         const currentPlayer = getPlayer();
         const nodeList = document.querySelectorAll(`#${getPlayer().name} div`);
-        if (getPlayer().name !== 'Computer') {
-            nodeList.forEach((node) => {
-                node.addEventListener('click', nodeEventHand);
-            });
-        } else {
-            computerPick();
-        }
+
+        setTimeout(() => {
+            if (getPlayer().name !== 'Computer') {
+                display.changeBulletMsg('Please select node to place the ship head.');
+                nodeList.forEach((node) => {
+                    node.addEventListener('click', nodeEventHand);
+                });
+            } else {
+                display.changeBulletMsg('Computer is making selection..');
+                computerPick();
+            }
+        }, 2000);
+
         function nodeEventHand(event) {
             const id = matchNumber(event.target.id);
             if (currentPlayer.checkShipPlacement(id)) {
@@ -198,9 +208,24 @@ const initialize = (() => {
 
     function submitHand(event) {
         event.preventDefault(); //prevent page from refreshing
-        console.log(input.value);
+        const val = input.value;
         input.value = '';
+        if (val) { //truthy value
+            if (val === 'Computer') {
+                display.changeBulletMsg(`You cannot be a 'Computer' BeepBoop.`);
+                setTimeout(() => {
+                    display.changeBulletMsg('Player, please enter your name below: ');
+                }, 2000);
+                return;
+            }
+            display.changeBulletMsg(`Welcome aboard, ${val}. Making grid..`);
+            display.hideNode(form);
+            setTimeout(() => {
+                initGame(`${val}`);
+            }, 2000);
+        }
     }
+
 
     submit.addEventListener('click', submitHand);
 
