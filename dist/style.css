@@ -111,6 +111,7 @@ input{
 }
 
 form input + button {
+    position: absolute;
     margin-left: -3vw;
 }
 
