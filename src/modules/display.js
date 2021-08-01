@@ -1,6 +1,6 @@
 const display = (() => {
-    const bulletin = document.querySelector('.bulletin');
     const container = document.querySelector('.container');
+    const bulletin = document.querySelector('#bulletin');
 
     function renderBoard(playerName) {
         let mainDiv = document.createElement('div');
@@ -46,17 +46,31 @@ const display = (() => {
         bulletin.textContent = str;
     }
 
-    function unhideNode(nodeID) {
+    function fadeInNode(nodeID) {
         nodeID.style.transition = 'opacity 0.5s ease-in';
         nodeID.style.opacity = '1';
     }
 
-    function hideNode(nodeID) {
+    function fadeOutNode(nodeID) {
         nodeID.style.transition = 'opacity, 0.5s ease-out';
         nodeID.style.opacity = '0';
     }
 
-    return { updateShips, updateBoardResult, renderBoard, shipDestroyed, changeBulletMsg, unhideNode, hideNode };
+    function toggleNode(nodeID) {
+        nodeID.style.display === 'none' ? nodeID.style.display = 'flex' : nodeID.style.display = 'none';
+    }
+
+    function toggleVerticalBtn(btn) {
+        btn.textContent === 'Vertical' ? btn.textContent = 'Horizontal' : btn.textContent = 'Vertical';
+    }
+
+    function resetDOM() {
+        while (container.hasChildNodes()) {
+            container.removeChild(container.lastChild);
+        }
+    }
+
+    return { resetDOM, updateShips, updateBoardResult, renderBoard, shipDestroyed, changeBulletMsg, toggleVerticalBtn, toggleNode, fadeInNode, fadeOutNode };
 
 })();
 

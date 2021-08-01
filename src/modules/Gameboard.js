@@ -43,7 +43,7 @@ const gameBoard = () => {
         //alignment is either vertical or horizontal
         // Gameboards should be able to place ships at specific coordinates 
         // by calling the ship factory function.
-        const { name, length } = getShipInfo(getNumOfShips());
+        const { name, length } = getShipInfo();
         const newShip = makeShip(name, length);
         coordinate = parseFloat(coordinate);
         for (let i = 0; i < length; i++) {
@@ -107,8 +107,8 @@ const gameBoard = () => {
         return ships.length;
     }
 
-    function getShipInfo(shipsArrLen) {
-        switch (shipsArrLen) {
+    function getShipInfo() {
+        switch (ships.length) {
             case 0: {
                 return { length: 5, name: 'Carrier' };
             }

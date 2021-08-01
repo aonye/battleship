@@ -6,7 +6,10 @@ const initialize = (() => {
     const form = document.getElementById('form');
     const input = document.querySelector('#name');
     const submit = document.querySelector('#name + button');
+    const vertical = document.querySelector('#vertical');
+    const newGame = document.querySelector('#newgame');
     const gameInfo = {};
+
     // let x = ship(4);
     // console.log(x);
     // x.hit(0);
@@ -24,21 +27,17 @@ const initialize = (() => {
     // t.receiveAttack('C5');
     // console.log(t.isAllSunk());
 
-    gamePrelim();
+    startGame();
 
-    function gamePrelim() {
+    function startGame() {
         setTimeout(() => {
             display.changeBulletMsg('Player, please enter your name below: ');
-            display.unhideNode(form);
-        }, 2000);
+            display.fadeInNode(form);
+        }, 2000); //2000
     }
 
-
-
-    //ship picking phase
-    //initGame();
-
-    function initGame(playerName) {
+    function initSettings(playerName) {
+        //ship picking phase
         //get input for player's real name and insert it into this function
         //error check - cannot name yourself Computer.
         gameInfo['player'] = playerFact(playerName, gameBoardFact());
@@ -46,35 +45,38 @@ const initialize = (() => {
         gameInfo['currentPlayer'] = pickRandStarter(Math.floor(Math.random() * 2));
         display.renderBoard(gameInfo['player'].name);
         display.renderBoard(gameInfo['cpu'].name);
-        display.changeBulletMsg(`${getPlayer().name} has been randomly chosen to start`);
+        console.log(gameInfo);
         placeShipPhase();
     }
 
     function placeShipPhase() {
         if (gameInfo.player.boardInfo.getNumOfShips() === 5 && gameInfo.cpu.boardInfo.getNumOfShips() === 5) {
-            console.log('finished placing ships');
-            playGame();
+            display.changeBulletMsg('Finished ship placing phase');
+            display.toggleNode(vertical);
+            setTimeout(() => {
+                playGame();
+            }, 2000); //2000
             return;
         }
         insertShip();
     }
 
-
     function insertShip() {
         const currentPlayer = getPlayer();
         const nodeList = document.querySelectorAll(`#${getPlayer().name} div`);
+        const { name, length } = getPlayer().boardInfo.getShipInfo();
 
-        setTimeout(() => {
-            if (getPlayer().name !== 'Computer') {
-                display.changeBulletMsg('Please select node to place the ship head.');
-                nodeList.forEach((node) => {
-                    node.addEventListener('click', nodeEventHand);
-                });
-            } else {
-                display.changeBulletMsg('Computer is making selection..');
+        if (getPlayer().name !== 'Computer') {
+            display.changeBulletMsg(`Please select node to place ship: ${name}(${length}).`);
+            nodeList.forEach((node) => {
+                node.addEventListener('click', nodeEventHand);
+            });
+        } else {
+            display.changeBulletMsg(`Computer is placing ship: ${name}(${length})..`);
+            setTimeout(() => {
                 computerPick();
-            }
-        }, 2000);
+            }, 1500); //1500
+        }
 
         function nodeEventHand(event) {
             const id = matchNumber(event.target.id);
@@ -96,7 +98,7 @@ const initialize = (() => {
                 move = currentPlayer.generateMove();
             } while (!currentPlayer.checkShipPlacement(move));
             currentPlayer.boardInfo.placeShip(move);
-            //display.updateShips(getPlayer().name, currentPlayer.boardInfo.board);
+            //display.updateShips(getPlayer().name, currentPlayer.boardInfo.board); //show cpu ships for debugging
             togglePlayer();
             placeShipPhase();
         }
@@ -135,23 +137,27 @@ const initialize = (() => {
         //Checks if it's a hit or a miss
         //Checks if the ship has been sunk
         if (gameInfo.player.boardInfo.isAllSunk()) {
-            console.log('made it in here');
+            display.changeBulletMsg(`${gameInfo.cpu.name} is the winner!`);
+            display.toggleNode(newGame);
             return;
         }
         else if (gameInfo.cpu.boardInfo.isAllSunk()) {
-            console.log('cpu has won');
+            display.changeBulletMsg(`${gameInfo.player.name} is the winner!`);
+            display.toggleNode(newGame);
             return;
         }
         else {
             switch (gameInfo.currentPlayer) {
                 case 'player': {
-                    playRound();//eventhandler handles recursion
+                    display.changeBulletMsg('Your turn to attack!');
+                    playRound(); //eventhandler handles recursion
                     break;
                 }
                 case 'cpu': {
+                    display.changeBulletMsg('Enemy fire!');
                     setTimeout(() => {
                         computerPlay();
-                    }, 2000);
+                    }, 1000); //1000
                     break;
                 }
             }
@@ -189,12 +195,15 @@ const initialize = (() => {
 
     function finishRound(div, index) {
         const { ship, result } = getOpponent().boardInfo.receiveAttack(index);
-        if (result) {
-            if (ship.isSunk()) {
-                console.log('ship sunk')
-            }
-            //console.log(`${name}(${length}) has been sunk by ${getPlayer().name}`);
-            //display.shipsDestroyed(name, getOpponent.boardInfo.board);
+        console.log(ship);
+        if (result && ship.isSunk()) {
+            display.changeBulletMsg(`${gameInfo.currentPlayer} has sunk ${ship.name}(${ship.length}).`);
+            display.updateBoardResult(div, result);
+            setTimeout(() => {
+                togglePlayer();
+                playGame();
+            }, 2000); //2000
+            return;
         }
         display.updateBoardResult(div, result);
         togglePlayer();
@@ -212,22 +221,47 @@ const initialize = (() => {
         input.value = '';
         if (val) { //truthy value
             if (val === 'Computer') {
-                display.changeBulletMsg(`You cannot be a 'Computer' BeepBoop.`);
+                display.changeBulletMsg(`You cannot be a 'Computer' Beep Boop.`);
                 setTimeout(() => {
                     display.changeBulletMsg('Player, please enter your name below: ');
-                }, 2000);
+                }, 2000); //2000
+                return;
+            } else if (val.length > 15) {
+                display.changeBulletMsg(`Name is too long (must be <15 chars). Try again.`);
+                setTimeout(() => {
+                    display.changeBulletMsg('Player, please enter your name below: ');
+                }, 2000); //2000
                 return;
             }
             display.changeBulletMsg(`Welcome aboard, ${val}. Making grid..`);
-            display.hideNode(form);
             setTimeout(() => {
-                initGame(`${val}`);
-            }, 2000);
+                display.toggleNode(form); //cannot set opacity to 0 as overlap will cause eventHand issues
+                display.toggleNode(vertical);
+                initSettings(`${val}`);
+            }, 2000); ///2000
         }
     }
 
+    function verticalClickHand(event) {
+        display.toggleVerticalBtn(event.target);
+        gameInfo.player.boardInfo.toggleVertical();
+    }
+
+    function newGameHand() {
+        display.toggleNode(newGame);
+        resetSettings();
+        startGame();
+    }
+
+    function resetSettings() {
+        display.resetDOM();
+        display.fadeOutNode(form); //reset opacity to 0
+        display.toggleNode(form); //retoggle since previously was untoggled to prevent conflict with verticalBtn
+    }
 
     submit.addEventListener('click', submitHand);
+    vertical.addEventListener('click', verticalClickHand);
+    newGame.addEventListener('click', newGameHand);
 
 })();
 
