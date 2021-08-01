@@ -13,11 +13,12 @@ body {
 
 .container {
     display: flex;
-    margin-top: 25vh;
+    height: 80vh;
 }
 
 .board {
     background-color: whitesmoke;
+    font-family: sans-serif;
     text-align: center;
     font-size: 2.5em;
     display: grid;
@@ -45,7 +46,6 @@ body {
     background-color: darkgray;
 }
 
-
 header {
     display: flex;
     justify-content: center;
@@ -56,6 +56,10 @@ header {
     font-weight: bolder;
     line-height: 40px;
     padding: 2rem;
+}
+
+#form {
+    opacity: 0;
 }
 
 header div {
@@ -71,6 +75,17 @@ html, body {
     margin: 0;
 }
 
+.bulletin {
+    margin: 3vh auto auto auto;
+    color: white;
+    background-color: red;
+    text-align: center;
+    line-height: 10vh;
+    font-size: 2em;
+    height: 10vh;
+    width: 50vw;
+}
+
 form {
     display: flex;
     justify-content: center;
@@ -80,6 +95,7 @@ form {
 
 input{
     width: 30vw;
+    outline: none;
 }
 
 form input + button {

@@ -3,6 +3,9 @@ import playerFact from './modules/player';
 import display from './modules/display';
 
 const initialize = (() => {
+    const form = document.getElementById('form');
+    const input = document.querySelector('#name');
+    const submit = document.querySelector('#name + button');
     const gameInfo = {};
     // let x = ship(4);
     // console.log(x);
@@ -20,6 +23,12 @@ const initialize = (() => {
     // console.log(t.boardInformation["board"]);
     // t.receiveAttack('C5');
     // console.log(t.isAllSunk());
+
+    setTimeout(() => {
+        display.changeBulletMsg('Player: please enter your name below: ');
+        console.log('lol');
+        display.unhideNode(form);
+    }, 2000);
 
     //ship picking phase
     initGame();
@@ -77,7 +86,7 @@ const initialize = (() => {
                 move = currentPlayer.generateMove();
             } while (!currentPlayer.checkShipPlacement(move));
             currentPlayer.boardInfo.placeShip(move);
-            display.updateShips(getPlayer().name, currentPlayer.boardInfo.board);
+            //display.updateShips(getPlayer().name, currentPlayer.boardInfo.board);
             togglePlayer();
             placeShipPhase();
         }
@@ -187,6 +196,13 @@ const initialize = (() => {
         return id.match(regex)[0];
     }
 
+    function submitHand(event) {
+        event.preventDefault(); //prevent page from refreshing
+        console.log(input.value);
+        input.value = '';
+    }
+
+    submit.addEventListener('click', submitHand);
 
 })();
 

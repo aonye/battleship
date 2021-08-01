@@ -1,4 +1,5 @@
 const display = (() => {
+    const bulletin = document.querySelector('.bulletin');
     const container = document.querySelector('.container');
 
     function renderBoard(playerName) {
@@ -41,7 +42,18 @@ const display = (() => {
         }
     }
 
-    return { updateShips, updateBoardResult, renderBoard, shipDestroyed };
+    function changeBulletMsg(str) {
+        bulletin.textContent = str;
+    }
+
+    function unhideNode(nodeID) {
+        console.log(nodeID);
+        nodeID.style.transition = 'opacity 1s ease-in';
+        nodeID.style.opacity = '1';
+    }
+
+
+    return { updateShips, updateBoardResult, renderBoard, shipDestroyed, changeBulletMsg, unhideNode };
 
 })();
 
