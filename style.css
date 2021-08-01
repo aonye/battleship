@@ -6,7 +6,7 @@
 }
 
 body {
-    background-color: rgb(0, 0, 102);
+    background-color: rgb(0, 0, 65);
     font-family: 'ITCMachine';
     -webkit-text-size-adjust: auto;
 }
@@ -20,7 +20,7 @@ body {
     background-color: whitesmoke;
     font-family: sans-serif;
     text-align: center;
-    font-size: 2.5em;
+    font-size: 3vw;
     display: grid;
     height: 500px;
     width: 500px;
@@ -62,6 +62,8 @@ header {
     opacity: 0;
 }
 
+
+
 header div {
     margin: 0px 0.5vw 0px 0.5vw;
     font-weight: bold;
@@ -75,22 +77,32 @@ html, body {
     margin: 0;
 }
 
-.bulletin {
+#bulletin {
     margin: 3vh auto auto auto;
     color: white;
-    background-color: red;
     text-align: center;
     line-height: 10vh;
-    font-size: 2em;
+    font-size: 1.5rem;
     height: 10vh;
-    width: 50vw;
+    width: 75vw;
+}
+
+#features {
+    display: flex;
+    justify-content: center;
+    margin-top: 3vh;
+}
+
+#vertical{
+    position: absolute;
+}
+
+#newgame {
+    position: absolute;
 }
 
 form {
-    display: flex;
-    justify-content: center;
-    height: 10vh;
-    align-items: center;
+    opacity: 0;
 }
 
 input{
