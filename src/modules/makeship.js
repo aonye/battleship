@@ -19,7 +19,4 @@ const makeShip = (name, length) => {
     };
 }
 
-
-
-
 export default makeShip;

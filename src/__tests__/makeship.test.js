@@ -1,6 +1,5 @@
 import makeShip from '../modules/makeship';
 
-
 test('Test hit', () => {
     let mockShip = makeShip(3);
     mockShip.hit(0);

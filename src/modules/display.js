@@ -14,12 +14,10 @@ const display = (() => {
         container.append(mainDiv);
     }
 
-    function updateShips(name, board) {
-        for (let i = 0; i < board.length; i++) {
-            if (board[i].containShip === true) {
-                const div = document.querySelector(`#${name + i}`);
-                div.style.backgroundColor = 'rgb(235, 199, 235)';
-            }
+    function highlightShips(name, array) {
+        for (let i = 0; i < array.length; i++) {
+            const div = document.querySelector(`#${name + array[i]}`);
+            div.style.backgroundColor = 'rgb(235, 199, 235)'; //plum
         }
     }
 
@@ -71,7 +69,7 @@ const display = (() => {
         }
     }
 
-    return { resetDOM, updateShips, updateBoardResult, renderBoard, shipDestroyed, changeBulletMsg, toggleVerticalBtn, toggleNode, fadeInNode, fadeOutNode };
+    return { resetDOM, highlightShips, updateBoardResult, renderBoard, shipDestroyed, changeBulletMsg, toggleVerticalBtn, toggleNode, fadeInNode, fadeOutNode };
 
 })();
 
