@@ -33,11 +33,12 @@ const display = (() => {
         }
     }
 
-    function shipDestroyed(name, board) {
+    function shipDestroyed(sunkShip, name, board) {
         for (let i = 0; i < board.length; i++) {
-            if (board[i].shipName === name) {
+            if (board[i].shipName === sunkShip) {
                 const div = document.querySelector(`#${name + i}`);
-                div.style.backgroundColor = 'rgb(235, 199, 235)';
+                div.style.transition = 'background-color 0.75s ease';
+                div.style.backgroundColor = 'rgb(40, 40, 40)';
             }
         }
     }

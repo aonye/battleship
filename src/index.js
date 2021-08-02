@@ -10,35 +10,16 @@ const initialize = (() => {
     const newGame = document.querySelector('#newgame');
     const gameInfo = {};
 
-    // let x = ship(4);
-    // console.log(x);
-    // x.hit(0);
-    // x.hit(1);
-    // x.hit(2);
-    // x.hit(3);
-    // x.hit(3);
-    // console.log(x.isSunk());
-    // console.log('hello world');
+    setTimeout(() => {
+        start();
+    }, 1000); //2000
 
-    // let t = board();
-    // t.toggleVertical();
-    // t.placeShip('Destroyer', 5, 'C5');
-    // console.log(t.boardInformation["board"]);
-    // t.receiveAttack('C5');
-    // console.log(t.isAllSunk());
-
-    startGame();
-
-    function startGame() {
-        setTimeout(() => {
-            display.changeBulletMsg('Player, please enter your name below: ');
-            display.fadeInNode(form);
-        }, 1); //2000
+    function start() {
+        display.changeBulletMsg('Player, please enter your name below: ');
+        display.fadeInNode(form);
     }
 
     function initSettings(playerName) {
-        //ship picking phase
-        //get input for player's real name and insert it into this function
         //error check - cannot name yourself Computer.
         gameInfo['player'] = playerFact(playerName, gameBoardFact());
         gameInfo['cpu'] = playerFact('Computer', gameBoardFact());
@@ -55,7 +36,7 @@ const initialize = (() => {
             display.toggleNode(vertical);
             setTimeout(() => {
                 playGame();
-            }, 1); //2000
+            }, 2000); //2000
             return;
         }
         insertShip();
@@ -65,17 +46,16 @@ const initialize = (() => {
         const currentPlayer = getPlayer();
         const nodeList = document.querySelectorAll(`#${getPlayer().name} div`);
         const { name, length } = getPlayer().boardInfo.getShipInfo();
-
         if (getPlayer().name !== 'Computer') {
             display.changeBulletMsg(`Please select node to place ship: ${name}(${length}).`);
             nodeList.forEach((node) => {
                 node.addEventListener('click', nodeEventHand);
             });
         } else {
-            display.changeBulletMsg(`Computer is placing ship: ${name}(${length})..`);
+            display.changeBulletMsg(`Computer is placing ship: ${name}(${length}).`);
             setTimeout(() => {
                 computerPick();
-            }, 1); //1500
+            }, 1500); //1500
         }
 
         function nodeEventHand(event) {
@@ -98,7 +78,7 @@ const initialize = (() => {
                 move = currentPlayer.generateMove();
             } while (!currentPlayer.checkShipPlacement(move));
             currentPlayer.boardInfo.placeShip(move);
-            //display.updateShips(getPlayer().name, currentPlayer.boardInfo.board); //show cpu ships for debugging
+            //display.updateShips(getPlayer().name, currentPlayer.boardInfo.board); // show cpu ships for debugging
             togglePlayer();
             placeShipPhase();
         }
@@ -131,11 +111,10 @@ const initialize = (() => {
         return 'cpu';
     }
 
-    function playGame() {
-        //Logic:
+    function playGame() { //player logic:
         //currentPlayer selects node on the opposing board
         //Checks if it's a hit or a miss
-        //Checks if the ship has been sunk
+        //If hit, check if the ship has been sunk
         if (gameInfo.player.boardInfo.isAllSunk()) {
             display.changeBulletMsg(`${gameInfo.cpu.name} is the winner!`);
             display.toggleNode(newGame);
@@ -157,7 +136,7 @@ const initialize = (() => {
                     display.changeBulletMsg('Enemy fire!');
                     setTimeout(() => {
                         computerPlay();
-                    }, 1); //1000
+                    }, 1000); //1000
                     break;
                 }
             }
@@ -195,14 +174,15 @@ const initialize = (() => {
 
     function finishRound(div, index) {
         const { ship, result } = getOpponent().boardInfo.receiveAttack(index);
-        console.log(ship);
         if (result && ship.isSunk()) {
+            const { name, boardInfo } = getOpponent();
             display.changeBulletMsg(`${gameInfo.currentPlayer} has sunk ${ship.name}(${ship.length}).`);
             display.updateBoardResult(div, result);
+            display.shipDestroyed(ship.name, name, boardInfo.board);
             setTimeout(() => {
                 togglePlayer();
                 playGame();
-            }, 2); //2000
+            }, 2000); //2000
             return;
         }
         display.updateBoardResult(div, result);
@@ -224,21 +204,21 @@ const initialize = (() => {
                 display.changeBulletMsg(`You cannot be a 'Computer' Beep Boop.`);
                 setTimeout(() => {
                     display.changeBulletMsg('Player, please enter your name below: ');
-                }, 2); //2000
+                }, 2000); //2000
                 return;
             } else if (val.length > 15) {
                 display.changeBulletMsg(`Name is too long (must be <15 chars). Try again.`);
                 setTimeout(() => {
                     display.changeBulletMsg('Player, please enter your name below: ');
-                }, 2); //2000
+                }, 2000); //2000
                 return;
             }
             display.changeBulletMsg(`Welcome aboard, ${val}. Making grid..`);
             setTimeout(() => {
-                display.toggleNode(form); //cannot set opacity to 0 as overlap will cause eventHand issues
+                display.toggleNode(form); //cannot set opacity 0 as overlap will cause eventHand issues
                 display.toggleNode(vertical);
                 initSettings(`${val}`);
-            }, 2); ///2000
+            }, 2000); ///2000
         }
     }
 
@@ -249,14 +229,9 @@ const initialize = (() => {
 
     function newGameHand() {
         display.toggleNode(newGame);
-        resetSettings();
-        startGame();
-    }
-
-    function resetSettings() {
         display.resetDOM();
-        display.fadeOutNode(form); //reset opacity to 0
-        display.toggleNode(form); //retoggle since previously was untoggled to prevent conflict with verticalBtn
+        const name = gameInfo.player.name;
+        initSettings(name);
     }
 
     submit.addEventListener('click', submitHand);

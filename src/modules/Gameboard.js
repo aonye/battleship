@@ -16,7 +16,6 @@ const gameBoard = () => {
     //10x10 board
     const board = initializeArr();
     const ships = [];
-    let winner = false;
     let isVertical = false;
 
     function initializeArr() {
