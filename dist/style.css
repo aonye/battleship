@@ -17,15 +17,16 @@ body {
 }
 
 .board {
-    background-color: whitesmoke;
-    font-family: sans-serif;
-    text-align: center;
-    font-size: 3vw;
     display: grid;
+    margin: auto;
     height: 500px;
     width: 500px;
-    margin: auto;
-    border: 3px solid rgb(60, 0, 60);
+    background-color: whitesmoke;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 2rem;
+    line-height: 150%;
+    border: 3px solid white;
     grid-template-columns: 1fr repeat(9, 1fr);
     grid-template-rows: 1fr repeat(9, 1fr);
 }
@@ -52,9 +53,9 @@ header {
     height: 5vh;
     background-color: rgb(60, 0, 60);
     color: floralwhite;
-    font-size: 3vw;
+    font-size: 4.5rem;
     font-weight: bolder;
-    line-height: 40px;
+    line-height: 5vh;
     padding: 2rem;
 }
 
@@ -80,7 +81,7 @@ html, body {
     color: whitesmoke !important;
     text-align: center;
     line-height: 10vh;
-    font-size: 1.5rem;
+    font-size: 2rem;
     height: 10vh;
     width: 75vw;
 }

@@ -33,7 +33,7 @@ const initialize = (() => {
         setTimeout(() => {
             display.changeBulletMsg('Player, please enter your name below: ');
             display.fadeInNode(form);
-        }, 2000); //2000
+        }, 1); //2000
     }
 
     function initSettings(playerName) {
@@ -55,7 +55,7 @@ const initialize = (() => {
             display.toggleNode(vertical);
             setTimeout(() => {
                 playGame();
-            }, 2000); //2000
+            }, 1); //2000
             return;
         }
         insertShip();
@@ -75,7 +75,7 @@ const initialize = (() => {
             display.changeBulletMsg(`Computer is placing ship: ${name}(${length})..`);
             setTimeout(() => {
                 computerPick();
-            }, 1500); //1500
+            }, 1); //1500
         }
 
         function nodeEventHand(event) {
@@ -157,7 +157,7 @@ const initialize = (() => {
                     display.changeBulletMsg('Enemy fire!');
                     setTimeout(() => {
                         computerPlay();
-                    }, 1000); //1000
+                    }, 1); //1000
                     break;
                 }
             }
@@ -202,7 +202,7 @@ const initialize = (() => {
             setTimeout(() => {
                 togglePlayer();
                 playGame();
-            }, 2000); //2000
+            }, 2); //2000
             return;
         }
         display.updateBoardResult(div, result);
@@ -224,13 +224,13 @@ const initialize = (() => {
                 display.changeBulletMsg(`You cannot be a 'Computer' Beep Boop.`);
                 setTimeout(() => {
                     display.changeBulletMsg('Player, please enter your name below: ');
-                }, 2000); //2000
+                }, 2); //2000
                 return;
             } else if (val.length > 15) {
                 display.changeBulletMsg(`Name is too long (must be <15 chars). Try again.`);
                 setTimeout(() => {
                     display.changeBulletMsg('Player, please enter your name below: ');
-                }, 2000); //2000
+                }, 2); //2000
                 return;
             }
             display.changeBulletMsg(`Welcome aboard, ${val}. Making grid..`);
@@ -238,7 +238,7 @@ const initialize = (() => {
                 display.toggleNode(form); //cannot set opacity to 0 as overlap will cause eventHand issues
                 display.toggleNode(vertical);
                 initSettings(`${val}`);
-            }, 2000); ///2000
+            }, 2); ///2000
         }
     }
 
